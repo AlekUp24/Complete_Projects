@@ -2,6 +2,7 @@
 # All files not modified in last X days will be moved.
 # All files will be stored under sub folders, grouped by file type.
 # Folder names are extensions in upper case.
+#works as charm
 
 import os
 import glob
