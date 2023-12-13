@@ -9,6 +9,8 @@ import tkinter
 zapisuj do db wszystkie dane (moze wiecej kolumn)
 nie nadpisuj istniejacych id i tworz dobry set danych
 
+present data in web, maybe plot - some data analitics
+
 """
 
 
