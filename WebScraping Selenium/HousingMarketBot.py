@@ -23,15 +23,6 @@ min_space = 40
 driver = webdriver.Chrome(sciezkaSelen)
 driver.get(webURL)
 
-# results table
-finalTable = pd.DataFrame({ 'ID':[],
-                            'Posting Date':[],
-                            'Space':[],
-                            'Price':[],
-                            'Location':[],
-                            'URL':[]})
-
-
 # accept cookies window
 try:
     acceptCookies = driver.find_element_by_id("onetrust-accept-btn-handler")
@@ -51,33 +42,62 @@ else:
     exit()
 
 # select city 
-popular_city = driver.find_element_by_id(f"sellPopularLocation{city}")
 sales_tab.click()
+popular_city = driver.find_element_by_id(f"sellPopularLocation{city}")
 popular_city.click()
 
 # get parameters boxes
-max_price_input_box = driver.find_element_by_id("priceMax")
-min_price_input_box = driver.find_element_by_id("priceMin")
-max_area_input_box = driver.find_element_by_id("areaMax")
-min_area_input_box = driver.find_element_by_id("areaMin")
-
-# input search criteria
-max_price_input_box.send_keys(max_price)
-min_price_input_box.send_keys(min_price)
-max_area_input_box.send_keys(max_space)
-min_area_input_box.send_keys(min_space)
+max_price_input_box = driver.find_element_by_id("priceMax").send_keys(max_price)
+min_price_input_box = driver.find_element_by_id("priceMin").send_keys(min_price)
+max_area_input_box = driver.find_element_by_id("areaMax").send_keys(max_space)
+min_area_input_box = driver.find_element_by_id("areaMin").send_keys(min_space)
 
 searchButton = driver.find_element_by_id("search-form-submit")
 searchButton.click()
 
+# sort price ascending
 try:
     sort_asc_button = driver.find_element(By.XPATH, "//button[@value='PRICE-ASC'][@role='radio']")
     sort_asc_button.click()
 except:
     print("No sort button found")
 
+
+# get offers (data)
+composed = [] # list of all offers as nested lists 
+
 try:
-    listings = driver.find_elements(By.XPATH, "//div[@name='search.listing.organic']")
-    print(listings)
+    listings = driver.find_elements(By.XPATH, "//li[@data-cy='listing-item']")
+    for each in listings[:10]:  # get only first 10
+        listURL = driver.find_element_by_link_text(each.text).get_attribute("href")
+        listID = listURL[-5:]
+        x = str(each.text).split(chr(10))
+        for i in x[::-1]:
+            if "DODANE" in str(i).upper() or "PODBITE" in str(i).upper():
+                x.remove(i)
+        x.insert(5,listURL)
+        x[0] = listID
+        composed.append(x[0:6]) 
 except:
     print("no listings found")
+    exit()
+
+# prepare results table
+finalTable = pd.DataFrame({ 'ID':[],
+                            'Description':[],
+                            'Address':[],
+                            'Price':[],
+                            'Offer from':[],
+                            'URL':[]})
+
+# put all data into dataframe
+for each in composed:
+    finalTable = finalTable.append({'ID':[each[0]],
+                                    'Description':[each[1]],
+                                    'Address':[each[2]],
+                                    'Price':[each[3]],
+                                    'Offer from':[each[4]],
+                                    'URL':[each[5]]},
+                                    ignore_index=True)
+    
+print(finalTable)
