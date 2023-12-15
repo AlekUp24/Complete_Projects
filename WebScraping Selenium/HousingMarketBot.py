@@ -43,22 +43,19 @@ else:
 
 # select city 
 sales_tab.click()
-popular_city = driver.find_element_by_id(f"sellPopularLocation{city}")
-popular_city.click()
+driver.find_element_by_id(f"sellPopularLocation{city}").click()
 
 # get parameters boxes
-max_price_input_box = driver.find_element_by_id("priceMax").send_keys(max_price)
-min_price_input_box = driver.find_element_by_id("priceMin").send_keys(min_price)
-max_area_input_box = driver.find_element_by_id("areaMax").send_keys(max_space)
-min_area_input_box = driver.find_element_by_id("areaMin").send_keys(min_space)
+driver.find_element_by_id("priceMax").send_keys(max_price)
+driver.find_element_by_id("priceMin").send_keys(min_price)
+driver.find_element_by_id("areaMax").send_keys(max_space)
+driver.find_element_by_id("areaMin").send_keys(min_space)
 
-searchButton = driver.find_element_by_id("search-form-submit")
-searchButton.click()
+driver.find_element_by_id("search-form-submit").searchButton.click()
 
 # sort price ascending
 try:
-    sort_asc_button = driver.find_element(By.XPATH, "//button[@value='PRICE-ASC'][@role='radio']")
-    sort_asc_button.click()
+    sort_asc_button = driver.find_element(By.XPATH, "//button[@value='PRICE-ASC'][@role='radio']").click()
 except:
     print("No sort button found")
 
