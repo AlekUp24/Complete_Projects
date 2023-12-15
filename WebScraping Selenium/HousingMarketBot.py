@@ -1,4 +1,3 @@
-import datetime
 import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -11,7 +10,6 @@ nie nadpisuj istniejacych id i tworz dobry set danych
 # set vars
 sciezkaSelen = "C:/SeleniumDrivers/chromedriver.exe"
 webURL = "https://otodom.pl" 
-teraz = str(datetime.datetime.now())
 
 city =  "Warszawa"
 max_price = 800000
@@ -45,13 +43,13 @@ else:
 sales_tab.click()
 driver.find_element_by_id(f"sellPopularLocation{city}").click()
 
-# get parameters boxes
+# set parameters boxes
 driver.find_element_by_id("priceMax").send_keys(max_price)
 driver.find_element_by_id("priceMin").send_keys(min_price)
 driver.find_element_by_id("areaMax").send_keys(max_space)
 driver.find_element_by_id("areaMin").send_keys(min_space)
 
-driver.find_element_by_id("search-form-submit").searchButton.click()
+driver.find_element_by_id("search-form-submit").click()
 
 # sort price ascending
 try:
