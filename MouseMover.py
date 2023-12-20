@@ -19,7 +19,8 @@ while True:
     if time_counter > 10:
         x = random.randint(100,width-100)
         y = random.randint(100,height-100)
-        p.moveTo(x,y,0.5)
+        z = random.uniform(0.3,1.5) # randomize mouse speed
+        p.moveTo(x,y,z)
         curr_pos = p.position()
 
     end = d.datetime.now() 
