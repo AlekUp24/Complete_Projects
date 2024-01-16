@@ -5,7 +5,7 @@ SIZE = (270,270)
 TITLE = ""
 FONT = "Arial"
 FONT_SIZE = 14
-ICO_PATH = "" #"blank.ico" #comment
+ICO_PATH = "" #"blank.ico"
 
 calculation = ""
 

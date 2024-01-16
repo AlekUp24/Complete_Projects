@@ -1,6 +1,6 @@
-import pandas as pd
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import time
 
 """
 zapisuj do db wszystkie dane (moze wiecej kolumn)
@@ -10,12 +10,13 @@ nie nadpisuj istniejacych id i tworz dobry set danych
 # set vars
 sciezkaSelen = "C:/SeleniumDrivers/chromedriver.exe"
 webURL = "https://otodom.pl" 
+marketDB = "C:\\Users\\hubi4\\Desktop\\HousingMarketDB.txt"
 
 city =  "Warszawa"
-max_price = 800000
+max_price = 1000000
 min_price = 450000
 max_space = 80
-min_space = 40
+min_space = 55
 
 # set driver
 driver = webdriver.Chrome(sciezkaSelen)
@@ -49,8 +50,15 @@ driver.find_element_by_id("priceMin").send_keys(min_price)
 driver.find_element_by_id("areaMax").send_keys(max_space)
 driver.find_element_by_id("areaMin").send_keys(min_space)
 
-driver.find_element_by_id("search-form-submit").click()
+time.sleep(2)
 
+try:
+    driver.find_element_by_id("search-form-submit").click()
+except:
+    print("no submit found")
+    exit()
+
+time.sleep(2)
 # sort price ascending
 try:
     sort_asc_button = driver.find_element(By.XPATH, "//button[@value='PRICE-ASC'][@role='radio']").click()
@@ -77,22 +85,24 @@ except:
     print("no listings found")
     exit()
 
-# prepare results table
-finalTable = pd.DataFrame({ 'ID':[],
-                            'Description':[],
-                            'Address':[],
-                            'Price':[],
-                            'Offer from':[],
-                            'URL':[]})
+# composed structure = 'ID', 'Description', 'Address', 'Price', 'Offer from',  'URL'
 
-# put all data into dataframe
+
 for each in composed:
-    finalTable = finalTable.append({'ID':[each[0]],
-                                    'Description':[each[1]],
-                                    'Address':[each[2]],
-                                    'Price':[each[3]],
-                                    'Offer from':[each[4]],
-                                    'URL':[each[5]]},
-                                    ignore_index=True)
-    
-print(finalTable)
+    if "Zapyt" in each[3]:
+        each[3] = "ZAPYTAJ"
+    elif each[3][0:2].isdigit():
+        each[3] = each[3][0:7] + " PLN"
+    else:
+        pass
+
+i=0
+try:
+    with open(marketDB, "a") as file_object:
+        for x in composed:
+            file_object.write(x[0] + " | " + x[1] + " | " + x[2] + " | " + x[3] + " | " + x[4] + " | " + x[5] + "\n")
+            i += 1
+    file_object.close()  
+except:
+    print("ERROR = Not saved to DB.")
+    exit()
