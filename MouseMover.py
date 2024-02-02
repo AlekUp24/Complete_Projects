@@ -3,11 +3,11 @@ import datetime as d
 import random, time
 
 
-def write_log(curr, new):
-    curr , new = str(curr) , str(new)
+def write_log(curr, new, clock):
+    curr , new , clock= str(curr) , str(new) , str(clock)
     file_path = "C:\\Users\\hubi4\\Desktop\\Hubert.txt" 
     log_file = open(file_path,'a')
-    log_file.write(F"Position changed from {curr} to {new} \n")
+    log_file.write(F"Position changed from {curr} to {new} at {clock} \n")
     log_file.close()
 
 
@@ -31,7 +31,7 @@ while True:
         z = random.uniform(0.3,1.5) # randomize mouse speed
         p.moveTo(x,y,z)
         try:
-            write_log(curr_pos , p.position())
+            write_log(curr_pos , p.position(), d.datetime.now() )
         except:
             print("couldn't log to the file")
         curr_pos = p.position()
